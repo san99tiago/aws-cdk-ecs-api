@@ -13,6 +13,9 @@ app = FastAPI()
 def read_root():
     return {"Message": "Hello World from Santi"}
 
+@app.get("/api/status")
+def status():
+    return {"Status": "Healthy"}
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, filter: Union[str, None] = None):
