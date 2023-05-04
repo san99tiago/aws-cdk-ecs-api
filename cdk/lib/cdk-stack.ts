@@ -67,6 +67,7 @@ export class CdkEcsApi extends Stack {
 
     // Create Application load balancer (ALB) resource (previously created in account)
     const alb = new elasticloadbalancing.ApplicationLoadBalancer(this, 'ALB', {
+      loadBalancerName: `${mainResourcesName}-${deploymentEnvironment}`,
       vpc: vpc,
       vpcSubnets: { subnets: vpc.publicSubnets },
       internetFacing: true,
@@ -150,7 +151,7 @@ export class CdkEcsApi extends Stack {
     ecsSG.connections.allowFrom(
       albSG,
       ec2.Port.allTcp(),
-      "Application load balancer to ECS containers"
+      "ALB to ECS containers"
     );
 
     // The ECS Service used for deploying tasks 
