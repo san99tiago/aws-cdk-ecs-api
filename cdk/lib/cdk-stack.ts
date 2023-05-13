@@ -1,4 +1,4 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
@@ -30,7 +30,7 @@ export class CdkEcsApi extends Stack {
     // Obtain extra IDs/variables from SSM Parameters
     const vpcId = ssm.StringParameter.valueFromLookup(this, `/${mainResourcesName}/${deploymentEnvironment}/vpc-id`);
 
-    // TODO: uncomment if ALB already exists, otherwise, is created it bellow
+    // TODO: uncomment if ALB already exists, otherwise, it's created bellow
     // const loadBalancerArn = ssm.StringParameter.valueFromLookup(this, `/${mainResourcesName}/${deploymentEnvironment}/alb-arn`);;
 
     // Obtain resource from existing VPC
@@ -59,7 +59,7 @@ export class CdkEcsApi extends Stack {
       threshold: 45, // Automatic rotation happens between 60 and 45 days before expiry
     });
 
-    // TODO: uncomment if ALB already exists, otherwise, is created it bellow
+    // TODO: uncomment if ALB already exists, otherwise, it's created bellow
     // // Get Application load balancer (ALB) resource (previously created in account)
     // const alb = elasticloadbalancing.ApplicationLoadBalancer.fromLookup(this, 'ALB', {
     //   loadBalancerArn: loadBalancerArn
@@ -100,13 +100,13 @@ export class CdkEcsApi extends Stack {
       description: "Role that the task definitions will use to run the code",
     });
 
-    // TODO: Update role based on Containers/ECS needs. Example s3 template
+    // TODO: Update role based on Containers needs (e.g. cost-explorer actions)
     taskRole.attachInlinePolicy(
       new iam.Policy(this, "ECS-TaskPolicy", {
         statements: [
           new iam.PolicyStatement({
             effect: iam.Effect.ALLOW,
-            actions: ["s3:GetObject", "s3:GetObjectAcl"],
+            actions: ["s3:*"], //ce:GetCostAndUsage", "ce:GetDimensionValues"],
             resources: ["*"],
           }),
         ],
@@ -215,6 +215,17 @@ export class CdkEcsApi extends Stack {
       target: route53.RecordTarget.fromAlias(new route53targets.LoadBalancerTarget(alb)),
       recordName: domainName,
       zone: hostedZone,
+    });
+
+    // CloudFormation outputs for the deployment
+    new CfnOutput(this, 'ALB_DNS', {
+      value: alb.loadBalancerDnsName,
+      description: 'API ALB internal DNS',
+    });
+
+    new CfnOutput(this, 'MAIN_DNS', {
+      value: domainName,
+      description: 'API public DNS',
     });
 
   }
