@@ -31,7 +31,8 @@ build-backend = "poetry.core.masonry.api"
 [tool.poe.tasks]
 test-unit = "coverage run -m pytest tests/unit"
 test-unit-html = "coverage html"
-test-integration = "pytest tests/integration"
+test-integration-load-manual = "locust -f tests/integration/locustfile.py"
+test-integration-load-auto = "locust -f tests/integration/locustfile.py --headless --host https://ecs-api.dev.san99tiago.com --users 20 --spawn-rate 1 --run-time 1m --csv=load_test_results"
 
 [tool.pytest.ini_options]
 minversion = "7.0"
