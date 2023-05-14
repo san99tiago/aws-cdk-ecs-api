@@ -67,7 +67,6 @@ export class CdkEcsApi extends Stack {
 
     // Create Application load balancer (ALB) resource (previously created in account)
     const alb = new elasticloadbalancing.ApplicationLoadBalancer(this, 'ALB', {
-      loadBalancerName: `${mainResourcesName}-${deploymentEnvironment}`,
       vpc: vpc,
       vpcSubnets: { subnets: vpc.publicSubnets },
       internetFacing: true,
@@ -96,7 +95,6 @@ export class CdkEcsApi extends Stack {
     // Role assumed by the task and its containers
     const taskRole = new iam.Role(this, "ECS-TaskRole", {
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
-      roleName: `${mainResourcesName}-task-role-${deploymentEnvironment}`,
       description: "Role that the task definitions will use to run the code",
     });
 
@@ -106,7 +104,7 @@ export class CdkEcsApi extends Stack {
         statements: [
           new iam.PolicyStatement({
             effect: iam.Effect.ALLOW,
-            actions: ["s3:*"], //ce:GetCostAndUsage", "ce:GetDimensionValues"],
+            actions: ["ce:GetCostAndUsage", "ce:GetDimensionValues"],
             resources: ["*"],
           }),
         ],
@@ -150,7 +148,7 @@ export class CdkEcsApi extends Stack {
     });
     ecsSG.connections.allowFrom(
       albSG,
-      ec2.Port.allTcp(),
+      ec2.Port.tcp(applicationPort),
       "ALB to ECS containers"
     );
 
@@ -177,7 +175,7 @@ export class CdkEcsApi extends Stack {
 
     // Health check for containers to check they were deployed correctly
     targetGroupHttp.configureHealthCheck({
-      path: "/api/status",
+      path: "/status",
       protocol: elasticloadbalancing.Protocol.HTTP,
     });
 
@@ -195,19 +193,19 @@ export class CdkEcsApi extends Stack {
     // Add the ECS service to the target group of the ALB 
     service.attachToApplicationTargetGroup(targetGroupHttp);
 
-    // // TODO: Add ASG if needed based on memory and CPU usage
-    // const scalableTaget = service.autoScaleTaskCount({
-    //   minCapacity: 2,
-    //   maxCapacity: 5,
-    // });
+    // ASG automatic configuration based on memory and CPU usage
+    const scalableTaget = service.autoScaleTaskCount({
+      minCapacity: 1,
+      maxCapacity: 2,
+    });
 
-    // scalableTaget.scaleOnMemoryUtilization("ECS-ScaleUpMem", {
-    //   targetUtilizationPercent: 75,
-    // });
+    scalableTaget.scaleOnMemoryUtilization("ECS-ScaleUpMem", {
+      targetUtilizationPercent: 70,
+    });
 
-    // scalableTaget.scaleOnCpuUtilization("ECS-ScaleUpCPU", {
-    //   targetUtilizationPercent: 75,
-    // });
+    scalableTaget.scaleOnCpuUtilization("ECS-ScaleUpCPU", {
+      targetUtilizationPercent: 70,
+    });
 
     // After ALB is configured, add an "A Record" in the R53 HZ for the domain
     const hostedZoneARecod = new route53.ARecord(this, 'ARecord', {
@@ -218,12 +216,12 @@ export class CdkEcsApi extends Stack {
     });
 
     // CloudFormation outputs for the deployment
-    new CfnOutput(this, 'ALB_DNS', {
+    new CfnOutput(this, 'AlbDns', {
       value: alb.loadBalancerDnsName,
-      description: 'API ALB internal DNS',
+      description: 'API ALB DNS',
     });
 
-    new CfnOutput(this, 'MAIN_DNS', {
+    new CfnOutput(this, 'MainDns', {
       value: domainName,
       description: 'API public DNS',
     });
