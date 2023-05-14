@@ -1,0 +1,57 @@
+[tool.poetry]
+name = "aws-cdk-ecs-api"
+version = "0.1.0"
+description = "AWS FastAPI CDK deployment on top of ALB and ECS with Docker containers implementing ECS as the orchestration tool for an AWS-managed infrastructure"
+authors = ["Santiago Garcia Arango <san99tiago>"]
+license = "Apache License 2.0"
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = {extras = ["all"], version = "^0.95.1"}
+uvicorn = {extras = ["standard"], version = "^0.22.0"}
+boto3 = "^1.26.133"
+
+[tool.poetry.group.test-unit.dependencies]
+pytest-mock = "^3.10.0"
+pytest = "^7.3.1"
+
+[tool.poetry.group.test-integration.dependencies]
+locust = "^2.15.1"
+
+[tool.poetry.group.dev.dependencies]
+poethepoet = "^0.20.0"
+coverage = "^7.2.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poe.tasks]
+test-unit = "coverage run -m pytest tests/unit"
+test-unit-html = "coverage html"
+test-integration = "pytest tests/integration"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "--junitxml=junit.xml"
+testpaths = [
+    "tests/unit",
+    "tests/integration",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+omit = [
+    "**/__init__.py"
+]
+
+[tool.coverage.report]
+show_missing = false
+exclude_lines =[
+    'pragma: no cover',
+    'def __repr__',
+    'if __name__ == .__main__.:',
+]
