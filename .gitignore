@@ -3,6 +3,7 @@
 ################################################################################
 # Temp files
 temp.*
+.DS_Store
 
 # Poetry lock file (not all projects ignore it, but for this scenario, better)
 poetry.lock
