@@ -1,23 +1,8 @@
-# aws-cdk-ecs-api
-
-- [aws-cdk-ecs-api](#aws-cdk-ecs-api)
-  - [Overview](#overview)
-  - [AWS Architecture Diagram](#aws-architecture-diagram)
-  - [Folders Explained](#folders-explained)
-  - [Usage](#usage)
-    - [Clone the repository](#clone-the-repository)
-    - [Configure Python](#configure-python)
-    - [Configure CDK](#configure-cdk)
-  - [Dependencies](#dependencies)
-    - [Software](#software)
-    - [Tools](#tools)
-  - [Special thanks](#special-thanks)
-  - [Author](#author)
-  - [LICENSE](#license)
-
-## Overview
+# :trident: AWS-CDK-ECS-API :trident:
 
 AWS FastAPI CDK deployment on top of ALB and ECS with Docker containers implementing ECS as the orchestration tool for an AWS-managed infrastructure.
+
+## Summary/Overview :memo:
 
 - Deployed on AWS with Infrastructure as Code on [CDK-Python](https://aws.amazon.com/cdk/).
 - API developed with [FastAPI](https://fastapi.tiangolo.com/lo/).
@@ -26,13 +11,13 @@ AWS FastAPI CDK deployment on top of ALB and ECS with Docker containers implemen
 - Load Balancing managed with [ELB - Application Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html) with listener ECS Service as target group.
 - Public DNS records on top of [Route 53](https://aws.amazon.com/route53/) with Certificates on [AWS Certificate Manager](https://aws.amazon.com/certificate-manager/).
 
-## AWS Architecture Diagram
+## AWS Architecture Diagram :trophy:
 
 The AWS infrastructure solution is deployed with CDK-Python with the resources defined on the `cdk` folder:
 
 <img src="assets/aws-cdk-ecs-api-architecture.png" width=80%> <br>
 
-## Folders Explained
+## Folders Explained :scroll:
 
 This repository consists of multiple folders/files, which are explained as follows:
 
@@ -41,7 +26,7 @@ This repository consists of multiple folders/files, which are explained as follo
 - Tests ([`./tests/`](./tests/))
 - Docker containerization ([`./src/Dockerfile`](./src/Dockerfile)).
 
-## Usage
+## Usage :white_check_mark:
 
 Follow these steps to configure the project locally:
 
@@ -70,7 +55,7 @@ Review the step by step commands for configuring the CDK at:
 
 > Note: for deploying or destroying the solution, see ("part 3") inside [`./commands_cdk.sh`](./commands_cdk.sh).
 
-## Dependencies
+## Dependencies :100:
 
 ### Software
 
@@ -91,11 +76,11 @@ Review the step by step commands for configuring the CDK at:
 - [AWS CLI](https://aws.amazon.com/cli/) <br>
   The AWS Command Line Interface (AWS CLI) is a unified tool to manage your AWS services. We will use it for connecting to our AWS account from the terminal (authentication and authorization towards AWS). <br>
 
-## Special thanks
+## Special thanks :beers:
 
 - I am grateful to the talented individuals who have dedicated their time and effort to develop the exceptional open-source projects that have been used in the creation of this solution. <br>
 
-## Author
+## Author :musical_keyboard:
 
 **Santiago Garcia Arango**
 
