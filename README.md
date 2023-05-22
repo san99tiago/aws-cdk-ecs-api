@@ -4,7 +4,7 @@ AWS FastAPI CDK deployment on top of ALB and ECS with Docker containers implemen
 
 ## Summary/Overview :memo:
 
-- Deployed on AWS with Infrastructure as Code on [CDK-Python](https://aws.amazon.com/cdk/).
+- Deployed on AWS with Infrastructure as Code on [CDK-TypeScript](https://aws.amazon.com/cdk/).
 - API developed with [FastAPI](https://fastapi.tiangolo.com/lo/).
 - Unit and Integration Tests for the source code with [PyTest](https://docs.pytest.org/en/latest).
 - Containerized solution with [Docker](https://www.docker.com) orchestrated by [Amazon ECS](https://aws.amazon.com/ecs/) (Fargate).
@@ -13,7 +13,7 @@ AWS FastAPI CDK deployment on top of ALB and ECS with Docker containers implemen
 
 ## AWS Architecture Diagram :trophy:
 
-The AWS infrastructure solution is deployed with CDK-Python with the resources defined on the `cdk` folder:
+The AWS infrastructure solution is deployed with CDK-TypeScript with the resources defined on the `cdk` folder:
 
 <img src="assets/aws-cdk-ecs-api-architecture.png" width=80%> <br>
 
