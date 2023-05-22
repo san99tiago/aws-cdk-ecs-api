@@ -123,14 +123,14 @@ export class CdkEcsApi extends Stack {
 
     // The Docker container for the task definition
     const container = taskDefinition.addContainer("ECS-Container", {
-      image: ecs.ContainerImage.fromAsset("../src/"),  // build and upload an image directly from a Dockerfile in your source directory.
+      image: ecs.ContainerImage.fromAsset("../src/"),  // build and upload an image directly from a Dockerfile in "src" directory.
       memoryLimitMiB: 512,
       environment: {
         EXAMPLE_KEY: "EXAMPLE_VALUE",
         OWNERS: "SantiagoGarcia_AndresMontano",
         ENVIRONMENT: deploymentEnvironment,
       },
-      // Store the logs in cloudwatch
+      // Store logs in CloudWatch Logs
       logging: ecs.LogDriver.awsLogs({ streamPrefix: mainResourcesName }),
     });
 
@@ -179,7 +179,7 @@ export class CdkEcsApi extends Stack {
       protocol: elasticloadbalancing.Protocol.HTTP,
     });
 
-    // Only allow HTTPS connections 
+    // Only allow HTTPS connections
     const listener = alb.addListener("ALB-Listener", {
       open: true,
       port: 443,
@@ -190,7 +190,7 @@ export class CdkEcsApi extends Stack {
       targetGroups: [targetGroupHttp],
     });
 
-    // Add the ECS service to the target group of the ALB 
+    // Add the ECS service to the target group of the ALB
     service.attachToApplicationTargetGroup(targetGroupHttp);
 
     // ASG automatic configuration based on memory and CPU usage
