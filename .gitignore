@@ -4,6 +4,9 @@
 # Temp files
 temp.*
 
+# Poetry lock file (not all projects ignore it, but for this scenario, better)
+poetry.lock
+
 # CDK context
 cdk.context.json
 
